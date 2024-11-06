@@ -103,12 +103,12 @@ h = 0.01;                     % Time step size
 
 
 % Time-stepping loop with animation
-I = size(Ase);
 while t < t_final
     % Solve for U_new using the implicit time-stepping formula
     % (SMass - h * Ase) * U_new = SMass * U
-    %U = implicitMatrix \ (SMass * U);
-    U = (h*inv(SMass)*Ase+eye(I(1)))*U;
+    U = h*Ase*U
+    
+
     t = t + h;
 end
 

@@ -1,4 +1,4 @@
-function B = createShiftedBlockDiag(A, m, w)
+function B = createShiftedBlockDiag(A, m, w, L)
     % createShiftedBlockDiag - Creates a shifted block diagonal matrix with overlapping
     % A - n*n matrix (input small block)
     % m - number of blocks
@@ -9,7 +9,7 @@ function B = createShiftedBlockDiag(A, m, w)
     % Get the size of the input matrix A
     [n, n_col] = size(A);
     A = A .* w;  % Apply the weight
-    
+    A = (2*m/L).*A;
     % Check if A is square
     if n ~= n_col
         error('Input matrix A must be square');

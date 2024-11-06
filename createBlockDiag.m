@@ -1,4 +1,4 @@
-function B = createBlockDiag(A, m, w)
+function B = createBlockDiag(A, m, w, L)
     % createBlockDiag - Creates a block diagonal matrix
     % A - n*n matrix (input small block)
     % m - number of blocks
@@ -14,6 +14,7 @@ function B = createBlockDiag(A, m, w)
     
     % Initialize an empty block diagonal matrix
     B = [];
+    A = (2*m/L).*A;
     A = A.*w;
     % Loop to create the block diagonal matrix
     for i = 1:m
