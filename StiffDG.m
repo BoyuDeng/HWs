@@ -1,4 +1,4 @@
-function B = createBlockDiag(A, m, w, L)
+function B = StiffDG(A, m, w)
     % createBlockDiag - Creates a block diagonal matrix
     % A - n*n matrix (input small block)
     % m - number of blocks
@@ -14,16 +14,16 @@ function B = createBlockDiag(A, m, w, L)
     
     % Initialize an empty block diagonal matrix
     B = [];
-    A = (2*m/L).*A;
-    A = A.*w;
+    %A = (2*m/L).*A;
+    A = A'*diag(w);
     % Loop to create the block diagonal matrix
     for i = 1:m
         B = blkdiag(B, A);
-        B(n*i,n*i) = B(n*i,n*i) + 1;
+        B(n*i,n*i) = B(n*i,n*i) - 1;
         
     end
     for i = 1:m-1
-        B(n*i+1, n*i) = B(n*i+1, n*i)-1;
+        B(n*i+1, n*i) = B(n*i+1, n*i)+1;
     end
-    B(1,end) = B(1,end) -1;
+    B(1,end) = B(1,end) +1;
 end

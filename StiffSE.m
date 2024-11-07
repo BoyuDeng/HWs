@@ -1,4 +1,4 @@
-function B = createShiftedBlockDiag(A, m, w, L)
+function B = StiffSE(A, m, w)
     % createShiftedBlockDiag - Creates a shifted block diagonal matrix with overlapping
     % A - n*n matrix (input small block)
     % m - number of blocks
@@ -8,8 +8,8 @@ function B = createShiftedBlockDiag(A, m, w, L)
     
     % Get the size of the input matrix A
     [n, n_col] = size(A);
-    A = A .* w;  % Apply the weight
-    A = (2*m/L).*A;
+    A = A' * diag(w);  % Apply the weight
+    
     % Check if A is square
     if n ~= n_col
         error('Input matrix A must be square');
@@ -45,4 +45,15 @@ function B = createShiftedBlockDiag(A, m, w, L)
     % Remove zero rows at the bottom by finding the last row with data
     last_row = find(any(B, 2), 1, 'last');  % Find the last non-zero row
     B = B(1:last_row, :);  % Trim to include only rows up to the last non-zero row
+
+    B(1,1) = B(1,1)+B(end,end);
+    B(end,end) = B(1,1);
+    
+    % Copy the first half of the first row to the last row (same columns)
+    half_point = floor(size(B, 2) / 2);
+    B(end, 1:half_point) = B(1, 1:half_point);
+    
+    % Copy the second half of the last row to the first row (same columns)
+    B(1, half_point+1:end) = B(end, half_point+1:end);
+
 end
