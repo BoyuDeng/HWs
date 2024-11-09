@@ -1,0 +1,85 @@
+function U_final = solve_SE(M,N)
+
+% Parameters
+L = 1000;      % Domain length (meters)
+lambda0 = 30;  % Lengthscale (meters)
+s = 1/25;      % Scaling factor
+C = 1;         % Velocity (m/s)
+x0 = 250;      % Initial center (meters)
+t = 0;                       % Initial time
+t_final = 2300;              % Final time for simulation
+h = 0.1; 
+
+
+
+% Parameters        % Length of the domain
+M = M;         % Number of elements
+N = N;         % Number of nodes per element
+
+
+
+
+% Generate the nodes and weights for each element
+[xi, w] = lglnodes(N+1); % Gauss-Legendre nodes and weights on [-1, 1]
+
+% Map nodes from [-1, 1] to each element in [0, L]
+xi = flipud(xi);
+
+
+% Differentiation matrix for Legendre-Gauss-Lobatto points
+D = derv(N,xi);
+
+Ase = StiffSE(D,M, w);
+
+SMass = SEmass(w,M,L);
+
+xse = map_gllse(N,L,M);
+
+% Define the spatial grid and initial Gaussian condition
+u0_gaussian = exp(-0.5 * ((xse - x0).^2) / lambda0^2);
+
+% Initial Condition: Cone
+u0_cone = max(0, 1 - s * abs(xse - x0));
+
+% Initialize other parameters
+                   % Time step size
+num_steps = floor(t_final / h);  % Total number of time steps
+
+% Pre-allocate U for all time steps
+U = zeros(length(xse), num_steps + 1);  % Pre-allocate with size for efficiency
+U(:,1) = u0_gaussian;  % Initial state vector at t=0
+
+% Precompute matrices
+H = inv(SMass)*Ase;
+
+% BDF3 coefficients (for implicit step)
+a0 = 11/6;
+a1 = -3;
+a2 = 3/2;
+a3 = -1/3;
+
+% AB3 coefficients (for explicit step)
+b(1) = 3;
+b(2) = -3;
+b(3)= 1;
+
+% Set initial conditions for the first few time steps
+U(:,2) = u0_gaussian;  % Placeholder for u^{n-1}
+U(:,3) = u0_gaussian;  % Placeholder for u^{n-2}
+
+% Time-stepping loop
+n = 3;  % Start at third time step (for AB3/BDF3)
+while t < t_final
+RHS = 0;
+    for j = 1:3
+        RHS = RHS + b(j)*H*U(:,n-j+1);
+    end
+
+    U(:,n+1) = (h*RHS - a1*U(:,n) - a2*U(:,n-1) - a3*U(:,n-2))/a0;
+    
+    % Increment time and shift indices
+    t = t + h;
+    n = n + 1;
+end
+
+U_final = U(:,end);
