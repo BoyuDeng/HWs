@@ -8,23 +8,22 @@ C = 1;         % Velocity (m/s)
 x0 = 250;      % Initial center (meters)
 
 
-
-[xi, w] = lglnodes(N+1); % Gauss-Legendre nodes and weights on [-1, 1]
-
-% Map nodes from [-1, 1] to each element in [0, L]
-xi = flipud(xi);
-
-
-D = derv(N,xi);
-
-Adg = StiffDG(D, M, w);
-Ase = StiffSE(D,M, w);
-DMass = DGmass(w,M,L);
-SMass = SEmass(w,M,L);
-
-
-x = map_gll(N,L,M);
-xse = map_gllse(N,L,M);
+% [xi, w] = lglnodes(N+1); % Gauss-Legendre nodes and weights on [-1, 1]
+% 
+% % Map nodes from [-1, 1] to each element in [0, L]
+% xi = flipud(xi);
+% 
+% 
+% D = derv(N,xi);
+% 
+% Adg = StiffDG(D, M, w);
+% Ase = StiffSE(D,M, w);
+% DMass = DGmass(w,M,L);
+% SMass = SEmass(w,M,L);
+% 
+% 
+% x = map_gll(N,L,M);
+% xse = map_gllse(N,L,M);
 
 
 
@@ -71,7 +70,7 @@ hold off;
 %%
 % Define parameters
 Ms = [5, 10, 20];  
-Ns = [4, 8, 16, 32];  
+Ns = [4, 8, 16];  
 L2_errors_SE = zeros(length(Ms), length(Ns));
 L2_errors_DG = zeros(length(Ms), length(Ns));
 

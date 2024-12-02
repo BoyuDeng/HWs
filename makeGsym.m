@@ -1,4 +1,4 @@
-function B = StiffSE(A, m, w)
+function B = makeGsym(A, m)
     % createShiftedBlockDiag - Creates a shifted block diagonal matrix with overlapping
     % A - n*n matrix (input small block)
     % m - number of blocks
@@ -8,8 +8,7 @@ function B = StiffSE(A, m, w)
     
     % Get the size of the input matrix A
     [n, n_col] = size(A);
-    A = A' * diag(w);  % Apply the weight
-    
+
     % Check if A is square
     if n ~= n_col
         error('Input matrix A must be square');
@@ -65,9 +64,4 @@ function B = StiffSE(A, m, w)
     B(end,:) = 0;
     B(end,end) = 1;
 
-end
-
-
-
-
-
+end 

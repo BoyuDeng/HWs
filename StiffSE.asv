@@ -60,14 +60,8 @@ function B = StiffSE(A, m, w)
 
 
     %for fix boundary condition
-    B(1,:) = 0;
+    B(:,1) = 0;
     B(1,1) = 1;
-    B(end,:) = 0;
-    B(end,end) = 1;
+    B(:,end)
 
 end
-
-
-
-
-

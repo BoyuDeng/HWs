@@ -1,3 +1,4 @@
+
 function U_final = solve_SE(M, N, Ini)
     % Solve the advection problem using the Spectral Element (S.E.) method with BDF/AB3
     % Inputs:
