@@ -2,7 +2,7 @@ close all; clc; clear;
 
 % Number of modal coefficients
 N = 16;
-M=32;
+M=64;
 
 % Initialize modal coefficients
 a = ones(N+1, 1); % a_i = 1 for i = 0 to N
@@ -47,7 +47,7 @@ BM = legendre_vandermonde(xM, M+1);
 a = inv(V)*u2;
 mod = linspace(0,16,17);
 figure;
-semilogy(mod, abs(a), '-o', 'LineWidth', 2, 'MarkerSize', 8);
+plot(mod, abs(a), '-o', 'LineWidth', 2, 'MarkerSize', 8);
 title('the modal coefficients u(x)^2 N=16');
 xlabel('Pn');
 ylabel('coe');
@@ -79,15 +79,34 @@ ylabel('u(x)'); % Label for y-axis
 grid on; % Turn on the grid
 hold off; % Release hold
 
-S = uM.*uM;
+S = uM.^2;
 
 coeSM = inv(BM)*S;
-
+coeSN=zeros(size(x));
 for i = 1:length(u)
     coeSN(i) = coeSM(i);
 end
-coeSN = coeSN';
+
 SN = B*coeSN;
+
+figure;
+plot(mod, abs(coeSN), '-o', 'LineWidth', 2, 'MarkerSize', 8);
+title('the modal coefficients u(x)^2 N=16 after filter');
+xlabel('Pn');
+ylabel('coe');
+grid on;
+
+figure; % Create a new figure
+hold on; % Hold on to overlay plots on the same graph
+plot(x, u2, '-o', 'LineWidth', 2, 'MarkerSize', 8); % Plot the first dataset
+plot(x, SN, '-r', 'LineWidth', 2, 'MarkerSize', 8); % Plot the second dataset
+title('Modal Representation of S on GLL Grid'); % Add title
+xlabel('x (GLL Points)'); % Label for x-axis
+ylabel('u(x)'); % Label for y-axis
+legend('S', 'After filter', 'Location', 'Best'); % Add legend
+grid on; % Turn on the grid
+hold off; % Release hold
+
 
 
 

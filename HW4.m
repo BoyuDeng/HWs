@@ -22,18 +22,32 @@ for i = 0:N
     u(i+1) = sum(P(:,i+1))*sum(P(:,i+1));
 end
 
-% % Plot the result
-% figure;
-% plot(x, u, '-o', 'LineWidth', 2, 'MarkerSize', 8);
-% title('Modal Representation of u(x) on GLL Grid');
-% xlabel('x (GLL Points)');
-% ylabel('u(x)');
-% grid on;
+% Plot the result
+figure;
+plot(x, u, '-o', 'LineWidth', 2, 'MarkerSize', 8);
+title('Modal Representation of u(x) on GLL Grid N=16');
+xlabel('x (GLL Points)');
+ylabel('u(x)');
+grid on;
 
 % Generate the Legendre Vandermonde matrix
 V = legendre_vandermonde(x, N+1);
 
-a = V\u;
+a = inv(V)*u;
+
+
+
+B=V;
+W = diag(w);
+A = inv(B.'*W*B)*B'*W;
+a = A*u;
+
+figure;
+plot(x, a, '-o', 'LineWidth', 2, 'MarkerSize', 8);
+title('Modal Representation of u(x) on GLL Grid N=16');
+xlabel('x (GLL Points)');
+ylabel('u(x)');
+grid on;
 
 
 
